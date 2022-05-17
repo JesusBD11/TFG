@@ -1,0 +1,56 @@
+{
+    "My Behavior": {
+        "checkpoints": [
+            {
+                "steps": 704,
+                "file_path": "results\\AgentWithClasses4\\My Behavior\\My Behavior-704.onnx",
+                "reward": -0.19593334197998047,
+                "creation_time": 1652629075.3592525,
+                "auxillary_file_paths": [
+                    "results\\AgentWithClasses4\\My Behavior\\My Behavior-704.pt"
+                ]
+            },
+            {
+                "steps": 499336,
+                "file_path": "results\\AgentWithClasses4\\My Behavior\\My Behavior-499336.onnx",
+                "reward": -1.0283374786376953,
+                "creation_time": 1652634937.6846027,
+                "auxillary_file_paths": [
+                    "results\\AgentWithClasses4\\My Behavior\\My Behavior-499336.pt"
+                ]
+            },
+            {
+                "steps": 998182,
+                "file_path": "results\\AgentWithClasses4\\My Behavior\\My Behavior-998182.onnx",
+                "reward": -0.179449995358785,
+                "creation_time": 1652643034.5408554,
+                "auxillary_file_paths": [
+                    "results\\AgentWithClasses4\\My Behavior\\My Behavior-998182.pt"
+                ]
+            },
+            {
+                "steps": 1020037,
+                "file_path": "results\\AgentWithClasses4\\My Behavior\\My Behavior-1020037.onnx",
+                "reward": -1.0039374828338623,
+                "creation_time": 1652643269.086112,
+                "auxillary_file_paths": [
+                    "results\\AgentWithClasses4\\My Behavior\\My Behavior-1020037.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1020037,
+            "file_path": "results\\AgentWithClasses4\\My Behavior.onnx",
+            "reward": -1.0039374828338623,
+            "creation_time": 1652643269.086112,
+            "auxillary_file_paths": [
+                "results\\AgentWithClasses4\\My Behavior\\My Behavior-1020037.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

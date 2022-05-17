@@ -1,0 +1,56 @@
+{
+    "My Behavior": {
+        "checkpoints": [
+            {
+                "steps": 266812,
+                "file_path": "results\\Test8\\My Behavior\\My Behavior-266812.onnx",
+                "reward": null,
+                "creation_time": 1652115697.1910074,
+                "auxillary_file_paths": [
+                    "results\\Test8\\My Behavior\\My Behavior-266812.pt"
+                ]
+            },
+            {
+                "steps": 499975,
+                "file_path": "results\\Test8\\My Behavior\\My Behavior-499975.onnx",
+                "reward": null,
+                "creation_time": 1652118927.086671,
+                "auxillary_file_paths": [
+                    "results\\Test8\\My Behavior\\My Behavior-499975.pt"
+                ]
+            },
+            {
+                "steps": 999958,
+                "file_path": "results\\Test8\\My Behavior\\My Behavior-999958.onnx",
+                "reward": null,
+                "creation_time": 1652125119.7691698,
+                "auxillary_file_paths": [
+                    "results\\Test8\\My Behavior\\My Behavior-999958.pt"
+                ]
+            },
+            {
+                "steps": 1159674,
+                "file_path": "results\\Test8\\My Behavior\\My Behavior-1159674.onnx",
+                "reward": null,
+                "creation_time": 1652126822.3366244,
+                "auxillary_file_paths": [
+                    "results\\Test8\\My Behavior\\My Behavior-1159674.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1159674,
+            "file_path": "results\\Test8\\My Behavior.onnx",
+            "reward": null,
+            "creation_time": 1652126822.3366244,
+            "auxillary_file_paths": [
+                "results\\Test8\\My Behavior\\My Behavior-1159674.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}
