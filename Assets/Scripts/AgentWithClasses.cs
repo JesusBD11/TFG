@@ -27,7 +27,7 @@ public class AgentWithClasses : Agent
     private bool [,] classes;
 
     public bool training = true;
-
+ 
     public override void Initialize()
     {
         
@@ -68,14 +68,15 @@ public class AgentWithClasses : Agent
 
         //////////////////////Observaciones realcionadas con el target////////////////////////////////////////
    
-        addObservations(sensor, getclassesBydirection(Vector3.forward));
+        addObservations(sensor, getclassesBydirection(transform.forward));
         addObservations(sensor, getclassesBydirection(Vector3.back));
         addObservations(sensor, getclassesBydirection(Vector3.left));
         addObservations(sensor, getclassesBydirection(Vector3.right));
+        /*
         addObservations(sensor, getclassesBydirection(new Vector3(1,0,1)));
         addObservations(sensor, getclassesBydirection(new Vector3(1,0,-1)));
         addObservations(sensor, getclassesBydirection(new Vector3(-1,0,1)));
-        addObservations(sensor, getclassesBydirection(new Vector3(-1,0,-1)));
+        addObservations(sensor, getclassesBydirection(new Vector3(-1,0,-1)));*/
     }
 
     public void addObservations(VectorSensor sensor, bool [] results) {
@@ -135,7 +136,7 @@ public class AgentWithClasses : Agent
 
     public bool [] getclassesBydirection(Vector3 direction) { 
 
-        int[] checkPoints = {50, 100, 200, 400};
+        int[] checkPoints = {15, 50, 100, 200};
         Vector3 actualPosition = transform.localPosition;
         List<bool> results = new List<bool>();
         
@@ -178,7 +179,7 @@ public class AgentWithClasses : Agent
         Vector3 posDef = new Vector3(0,0,0);
         bool ok = false;
         while (!ok) {
-            float x = Random.Range(-300f,300f);
+            float x = Random.Range(-200f,200f);
             float z = Random.Range(-300f,300f);
             Vector3 targetPos = new Vector3(initialTargetPosition.x+x,0,initialTargetPosition.z+z);
             //Debug.Log(agentPos.ToString());
@@ -203,7 +204,7 @@ public class AgentWithClasses : Agent
         Vector3 posDef = new Vector3(0,0,0);
         Vector3 targetPos = target.transform.localPosition;
         while (!ok) {
-            float x = Random.Range(-300f,300f);
+            float x = Random.Range(-200f,200f);
             float z = Random.Range(-300f,300f);
             Vector3 agentPos = new Vector3(targetPos.x+x,0,targetPos.z+z);
             //Debug.Log(agentPos.ToString());

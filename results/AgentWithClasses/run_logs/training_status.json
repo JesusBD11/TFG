@@ -2,58 +2,49 @@
     "My Behavior": {
         "checkpoints": [
             {
-                "steps": 499994,
-                "file_path": "results\\AgentWithClasses\\My Behavior\\My Behavior-499994.onnx",
-                "reward": 1.493575096130371,
-                "creation_time": 1652360444.0937736,
+                "steps": 499985,
+                "file_path": "results\\AgentWithClasses\\My Behavior\\My Behavior-499985.onnx",
+                "reward": 1.4701750157400966,
+                "creation_time": 1652987519.648697,
                 "auxillary_file_paths": [
-                    "results\\AgentWithClasses\\My Behavior\\My Behavior-499994.pt"
+                    "results\\AgentWithClasses\\My Behavior\\My Behavior-499985.pt"
                 ]
             },
             {
-                "steps": 748436,
-                "file_path": "results\\AgentWithClasses\\My Behavior\\My Behavior-748436.onnx",
+                "steps": 999945,
+                "file_path": "results\\AgentWithClasses\\My Behavior\\My Behavior-999945.onnx",
                 "reward": null,
-                "creation_time": 1652363243.6665454,
+                "creation_time": 1652993171.1957471,
                 "auxillary_file_paths": [
-                    "results\\AgentWithClasses\\My Behavior\\My Behavior-748436.pt"
+                    "results\\AgentWithClasses\\My Behavior\\My Behavior-999945.pt"
                 ]
             },
             {
-                "steps": 999948,
-                "file_path": "results\\AgentWithClasses\\My Behavior\\My Behavior-999948.onnx",
+                "steps": 1223619,
+                "file_path": "results\\AgentWithClasses\\My Behavior\\My Behavior-1223619.onnx",
                 "reward": null,
-                "creation_time": 1652366226.1500137,
+                "creation_time": 1652995712.537627,
                 "auxillary_file_paths": [
-                    "results\\AgentWithClasses\\My Behavior\\My Behavior-999948.pt"
+                    "results\\AgentWithClasses\\My Behavior\\My Behavior-1223619.pt"
                 ]
             },
             {
-                "steps": 1096429,
-                "file_path": "results\\AgentWithClasses\\My Behavior\\My Behavior-1096429.onnx",
+                "steps": 1224707,
+                "file_path": "results\\AgentWithClasses\\My Behavior\\My Behavior-1224707.onnx",
                 "reward": null,
-                "creation_time": 1652367318.3731499,
+                "creation_time": 1653384948.961704,
                 "auxillary_file_paths": [
-                    "results\\AgentWithClasses\\My Behavior\\My Behavior-1096429.pt"
-                ]
-            },
-            {
-                "steps": 1138192,
-                "file_path": "results\\AgentWithClasses\\My Behavior\\My Behavior-1138192.onnx",
-                "reward": null,
-                "creation_time": 1652368999.6791813,
-                "auxillary_file_paths": [
-                    "results\\AgentWithClasses\\My Behavior\\My Behavior-1138192.pt"
+                    "results\\AgentWithClasses\\My Behavior\\My Behavior-1224707.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 1138192,
+            "steps": 1224707,
             "file_path": "results\\AgentWithClasses\\My Behavior.onnx",
             "reward": null,
-            "creation_time": 1652368999.6791813,
+            "creation_time": 1653384948.961704,
             "auxillary_file_paths": [
-                "results\\AgentWithClasses\\My Behavior\\My Behavior-1138192.pt"
+                "results\\AgentWithClasses\\My Behavior\\My Behavior-1224707.pt"
             ]
         }
     },

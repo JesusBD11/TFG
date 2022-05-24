@@ -1,0 +1,47 @@
+{
+    "My Behavior": {
+        "checkpoints": [
+            {
+                "steps": 2219,
+                "file_path": "results\\AgentOptimize\\My Behavior\\My Behavior-2219.onnx",
+                "reward": null,
+                "creation_time": 1652960259.240143,
+                "auxillary_file_paths": [
+                    "results\\AgentOptimize\\My Behavior\\My Behavior-2219.pt"
+                ]
+            },
+            {
+                "steps": 499939,
+                "file_path": "results\\AgentOptimize\\My Behavior\\My Behavior-499939.onnx",
+                "reward": -1.4018166046589613,
+                "creation_time": 1652967781.4770386,
+                "auxillary_file_paths": [
+                    "results\\AgentOptimize\\My Behavior\\My Behavior-499939.pt"
+                ]
+            },
+            {
+                "steps": 511654,
+                "file_path": "results\\AgentOptimize\\My Behavior\\My Behavior-511654.onnx",
+                "reward": null,
+                "creation_time": 1652967932.4118347,
+                "auxillary_file_paths": [
+                    "results\\AgentOptimize\\My Behavior\\My Behavior-511654.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 511654,
+            "file_path": "results\\AgentOptimize\\My Behavior.onnx",
+            "reward": null,
+            "creation_time": 1652967932.4118347,
+            "auxillary_file_paths": [
+                "results\\AgentOptimize\\My Behavior\\My Behavior-511654.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

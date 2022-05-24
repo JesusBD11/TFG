@@ -1,0 +1,47 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1653384585",
+        "python_version": "3.7.11 (default, Jul 27 2021, 09:42:29) [MSC v.1916 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\kanga\\anaconda3\\envs\\ml-agents-r17\\Scripts\\mlagents-learn configuration.yaml --run-id=CheckPoints4 --resume",
+        "mlagents_version": "0.28.0",
+        "mlagents_envs_version": "0.28.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "1.7.1+cu110",
+        "numpy_version": "1.21.5",
+        "end_time_seconds": "1653384628"
+    },
+    "total": 43.1958323,
+    "count": 1,
+    "self": 0.007967700000001798,
+    "children": {
+        "run_training.setup": {
+            "total": 0.15094990000000008,
+            "count": 1,
+            "self": 0.15094990000000008
+        },
+        "TrainerController.start_learning": {
+            "total": 43.0369147,
+            "count": 1,
+            "self": 0.0004505999999935284,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 43.036450200000004,
+                    "count": 1,
+                    "self": 43.036450200000004
+                },
+                "trainer_threads": {
+                    "total": 1.300000000981072e-06,
+                    "count": 1,
+                    "self": 1.300000000981072e-06
+                },
+                "TrainerController._save_models": {
+                    "total": 1.2599999998030853e-05,
+                    "count": 1,
+                    "self": 1.2599999998030853e-05
+                }
+            }
+        }
+    }
+}

@@ -71,9 +71,10 @@ public class BasicAgent : Agent
         Vector3 posDef = new Vector3(0,0,0);
         bool ok = false;
         while (!ok) {
-            float x = Random.Range(2f,9818f);
-            float z = Random.Range(2f,10018f);
-            Vector3 targetPos = new Vector3(x,0,z);
+            float x = Random.Range(-300f,300f);
+            float z = Random.Range(-300f,300f);
+            //Vector3 targetPos = new Vector3(x,0,z);
+            Vector3 targetPos = new Vector3(initialTargetPosition.x+x,0,initialTargetPosition.z+z);
             //Debug.Log(agentPos.ToString());
             if (correctPosition(targetPos)) {
                 ok = true;
@@ -86,7 +87,7 @@ public class BasicAgent : Agent
             }
     
         }
-
+ 
         return posDef;
 
     }

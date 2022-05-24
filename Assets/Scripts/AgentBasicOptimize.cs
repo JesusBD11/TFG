@@ -80,7 +80,7 @@ public class AgentBasicOptimize : Agent
 
     public string [][] getInclination() {
 
-        var filePath = @"C:\Users\kanga\Documents\TFG\Unity\Modelos\aiguestortes\inclination.csv";
+        var filePath = @"C:\Users\kanga\Documents\TFG\Unity\Modelos\aiguestortes\inclinationNormalized.csv";
         return File.ReadLines(filePath).Select(x => x.Split(',')).ToArray();
 
     }
@@ -88,10 +88,11 @@ public class AgentBasicOptimize : Agent
     public float getInclinationAverage(Vector3 actualPosition, Vector3 direction, int difference) {
         float maxInclination = 0;
         int i = 0;
-        
+        float actualInclination = 0;
         
         while (i < difference) {
-            float actualInclination = float.Parse(inclination[(int)actualPosition.z+1][(int)actualPosition.x+1], CultureInfo.InvariantCulture.NumberFormat);
+            if (!correctPosition(actualPosition)) actualInclination = 1f;
+            else actualInclination = float.Parse(inclination[(int)actualPosition.z+1][(int)actualPosition.x+1], CultureInfo.InvariantCulture.NumberFormat);
             if (actualInclination > maxInclination) maxInclination = actualInclination;
             actualPosition += direction*i;
             i += 1;
@@ -171,7 +172,7 @@ public class AgentBasicOptimize : Agent
 
         bool ok = false;
         Vector3 posDef = new Vector3(0,0,0);
-        Vector3 targetPos = target.transform.localPosition;
+        Vector3 targetPos = target.transform.localPosition; 
         while (!ok) {
             float x = Random.Range(-350f,350f);
             float z = Random.Range(-350f,350f);
@@ -205,8 +206,8 @@ public class AgentBasicOptimize : Agent
     //Comprueba si una posicion dada esta dentro de los limites del terreno
     public bool correctPosition(Vector3 pos) {
 
-        if (pos.x > 9820 || pos.x < 0f) return false;
-        if (pos.z > 10020f || pos.z < 0f) return false;
+        if (pos.x >= 9819 || pos.x <= 0f) return false;
+        if (pos.z >= 10019f || pos.z <= 0f) return false;
 
         return true;
     }
@@ -219,7 +220,7 @@ public class AgentBasicOptimize : Agent
         float directionHeight = Terrain.activeTerrain.SampleHeight(futurePos) + Terrain.activeTerrain.GetPosition().y;
             
         float actualInclination = float.Parse(inclination[(int)transform.localPosition.z+1][(int)transform.localPosition.x+1], CultureInfo.InvariantCulture.NumberFormat);
-        Debug.Log("Inclinacion: "+actualInclination);
+        //Debug.Log("Inclinacion: "+actualInclination);
         if (actualInclination > 300f) {
             
             if (directionHeight > actualHeigh) {
