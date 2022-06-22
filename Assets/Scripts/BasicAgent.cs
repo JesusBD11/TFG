@@ -98,8 +98,8 @@ public class BasicAgent : Agent
         Vector3 posDef = new Vector3(0,0,0);
         Vector3 targetPos = target.transform.localPosition;
         while (!ok) {
-            float x = Random.Range(-200f,200f);
-            float z = Random.Range(-200f,200f);
+            float x = Random.Range(-350f,350f);
+            float z = Random.Range(-300f,300f);
             Vector3 agentPos = new Vector3(targetPos.x+x,0,targetPos.z+z);
             //Debug.Log(agentPos.ToString());
             if (correctPosition(agentPos)) {

@@ -8,6 +8,22 @@ using System.IO;
 using System.Linq;
 using Random=UnityEngine.Random;
 using System.Collections.Generic;
+using System.Globalization;
+
+public static class Extns
+{
+    public static Vector2 xz(this Vector3 vv)
+    {
+        return new Vector2(vv.x, vv.z);
+    }    
+     
+    public static float FlatDistanceTo(this Vector3 from, Vector3 unto)
+    {
+        Vector2 a = from.xz();
+        Vector2 b = unto.xz();
+        return Vector2.Distance( a, b );
+    }
+}
 
 public class AgentInclination : Agent
 {
@@ -17,122 +33,164 @@ public class AgentInclination : Agent
     public float _turnSpeed = 50f;
     public float _speed = 2f;
 
-    //private Rigidbody playerRigidbody;
-    protected Rigidbody _rb;
-
     Vector3 initialTargetPosition;
 
-    private string [][] inclination;
+    private float [,] slope;
+
+    private float [,] exposure;
+
+    public bool training = true;
+
+    private float distanceCovered = 0;
+    private float walkSteps = 0;
+
+    private static int GRID_SIZE_Z = 10020;
+    private static int GRID_SIZE_X = 9820;
+    
+    private float MAX_WALK_STEPS = 15000.0f;
+    private float SEARCH_RADIUS = 1000.0f;
 
     public override void Initialize()
     {
         
-        _rb = GetComponent<Rigidbody>();    
+          
         initialTargetPosition = target.transform.localPosition;
-        inclination = getInclination();
-        
+
+        if (!training) MaxStep = 0;
+        slopePreprocessing(Slope());
+        //exposurePreprocessing(Exposure());
+        target.transform.position = getTargetStartedPosition();
     }
 
 
     public override void OnEpisodeBegin()
     {
         
-        transform.LookAt(target.transform);
-
-        _rb.velocity = Vector3.zero;
-        _rb.angularVelocity = Vector3.zero;
-        
-        target.transform.localPosition = getTargetStartedPosition();
-        
-        transform.localPosition = getAgentPosition();
+        transform.position = getAgentPosition();
         transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
+        distanceCovered = 0;
+        walkSteps = 0;
+    
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
 
         //////////////////////Observaciones realcionadas con el target////////////////////////////////////////
-        
+
+
+        Vector2 toTarget = (target.transform.position - this.transform.position).xz();
+        float dist = toTarget.magnitude;
+        toTarget = toTarget.normalized;
+
         // Distancia al Target
-        sensor.AddObservation(Vector3.Distance(this.transform.localPosition, target.transform.localPosition));
+        sensor.AddObservation(dist/SEARCH_RADIUS);
 
-        //Hacia donde mira
-        sensor.AddObservation(transform.forward);
+        // Direccion del target
+        sensor.AddObservation(toTarget);
 
-        //Direción del objetivo
-        sensor.AddObservation((target.transform.localPosition - transform.localPosition).normalized);
+        // Direccion forward
+        sensor.AddObservation(transform.forward.xz().normalized);
+//69
 
-        //////////////////////Observaciones realcionadas con el terreno////////////////////////////////////////
+        //////////////////////Observaciones realcionadas con el target////////////////////////////////////////
+        addObservations(sensor, getInclinationBydirection( transform.forward));
+        addObservations(sensor, getInclinationBydirection((transform.forward + transform.right).normalized));
+        addObservations(sensor, getInclinationBydirection((transform.forward - transform.right).normalized));
+        addObservations(sensor, getInclinationBydirection( transform.right));
 
-        sensor.AddObservation(getInclinationBydirection(Vector3.forward));
-        sensor.AddObservation(getInclinationBydirection(Vector3.back));
-        sensor.AddObservation(getInclinationBydirection(Vector3.left));
-        sensor.AddObservation(getInclinationBydirection(Vector3.right));
-
-        sensor.AddObservation(getInclinationBydirection(new Vector3(1,0,1)));
-        sensor.AddObservation(getInclinationBydirection(new Vector3(1,0,-1)));
-        sensor.AddObservation(getInclinationBydirection(new Vector3(-1,0,1)));
-        sensor.AddObservation(getInclinationBydirection(new Vector3(-1,0,-1)));
+        addObservations(sensor, getInclinationBydirection(-transform.right));
+        addObservations(sensor, getInclinationBydirection((-transform.forward + transform.right).normalized));
+        addObservations(sensor, getInclinationBydirection((-transform.forward - transform.right).normalized));
+        addObservations(sensor, getInclinationBydirection(-transform.forward));
         
     }
 
-    public string [][] getInclination() {
+    public void addObservations(VectorSensor sensor, float [] results) {
+        for (int i = 0; i < results.Length; ++i) {           
+            sensor.AddObservation(results[i]);
+        }
+    }
+    public void slopePreprocessing(string [][] aux) {
+        slope = new float[GRID_SIZE_Z,GRID_SIZE_X];
+        for(int i = 0; i < GRID_SIZE_Z; ++i) {
+            for(int j = 0; j < GRID_SIZE_X; ++j) {
+                slope[i,j] = 90.0f * float.Parse(aux[i][j])/255.0f;
+            }
+        }
+    }
 
+    /*public void exposurePreprocessing(string [][] aux) {
+        exposure = new float[GRID_SIZE_Z,GRID_SIZE_X];
+        for(int i = 0; i < GRID_SIZE_Z; ++i) {
+            for(int j = 0; j < GRID_SIZE_X; ++j) {
+                exposure[i,j] = float.Parse(aux[i][j])/255.0f;  // normalizo entre 0 y 1, luego ya en la logica del step haremos * la probabilidad de caída
+            }
+        }
+    }*/
+
+    /*public string [][] Exposure() {
+        var filePath = @"C:\Users\kanga\Documents\TFG\Unity\Modelos\aiguestortes\exposure.csv";
+        return File.ReadLines(filePath).Select(x => x.Split(',')).ToArray();
+    }*/
+
+    public string [][] Slope() {
         var filePath = @"C:\Users\kanga\Documents\TFG\Unity\Modelos\aiguestortes\inclination.csv";
         return File.ReadLines(filePath).Select(x => x.Split(',')).ToArray();
-
     }
 
-    public float getInclinationAverage(Vector3 actualPosition, Vector3 direction, int difference) {
-        float accumulateAverage = 0;
-        int i = 0;
-        
-        while (i < difference) {
-            float actualInclination = float.Parse(inclination[(int)transform.localPosition.z][(int)transform.localPosition.x]);
-            accumulateAverage += actualInclination;
-            i += 1;
-        }
-        //Debug.Log(accumulateAverage/difference);
-        return accumulateAverage/difference;
-
+    public float getInclination(Vector3 pos) {
+        return slope[(int)pos.z,(int)pos.x];
     }
+
+    /*public float getExposure(Vector3 pos) {
+        return exposure[(int)pos.z,(int)pos.x];
+    }*/
 
     public float [] getInclinationBydirection(Vector3 direction) { 
 
-        int[] checkPoints = {15, 30, 60, 120};
-        Vector3 actualPosition = transform.localPosition;
-        List<float> averages = new List<float>();
-        
-        int difference;
-        Vector3 auxPosition;
-        int i = 0;        
+        float[] checkPoints = {15f, 60f, 150f, 300f};
+        float[] stepSize  = {1.0f, 2.0f, 4.0f, 8.0f};
+        Vector3 actualPosition = transform.position;
 
-        while (i <= 3) {
+        //float[] classCount = new float[NUM_CLASSES*checkPoints.Length];
+        float [] maxInclinationsByDirection = new float [checkPoints.Length];
+        for (int i = 0; i < checkPoints.Length; i++) {
 
-            if (i > 0) {
-                difference = checkPoints[i] - checkPoints[i-1];
-                auxPosition = actualPosition + direction*difference;
-                
+            float maxInclinationByCheckPoint = 0;
+            //float maxExposureByCheckPoint = 0;
+            float t = i > 0 ? checkPoints[i-1] : 0;
+            while (t < checkPoints[i]) {
+
+                // posicion. Mejor calcular siempre para evitar ir acumulando errores precision
+                Vector3 pos = transform.position + t*direction;
+
+                // obtenemos clase
+                float actualInclination;
+                //float actualExposure = getExposure(pos);
+
+                if (!correctPosition(pos)){
+                    actualInclination = 1f;
+                }
+
+                else {
+                    actualInclination = getInclination(pos)/255f;
+                }
+
+                // comprobamos si hay que actualizar la max
+                if (actualInclination > maxInclinationByCheckPoint) {
+                    maxInclinationByCheckPoint = actualInclination;
+                }
+                /*if (actualExposure > maxExposureByCheckPoint) {
+                    maxExposureByCheckPoint = actualExposure;
+                }*/
+                // avanzamos
+                t += stepSize[i];
             }
-            else {
-                difference = checkPoints[i];
-                auxPosition = actualPosition + direction*difference;
-            }
-            
-            float avegrageInclination = getInclinationAverage(actualPosition, direction, difference);                
-        
-            averages.Add(avegrageInclination);
-
-
-            actualPosition = auxPosition;
-
-            i += 1;
+            maxInclinationsByDirection[i] = maxInclinationByCheckPoint;
+            //maxInclinationsByDirection[i+1] = maxExposureByCheckPoint;
         }
-
-        float [] finalAverage =  averages.ToArray();
-       
-        return finalAverage;
-      
+        return maxInclinationsByDirection;      
     }
 
     
@@ -144,11 +202,11 @@ public class AgentInclination : Agent
         Vector3 posDef = new Vector3(0,0,0);
         bool ok = false;
         while (!ok) {
-            float x = Random.Range(-350f,350f);
-            float z = Random.Range(-350f,350f);
+            float x = Random.Range(-1500f,1500f);
+            float z = Random.Range(-2000f,2000f);
             Vector3 targetPos = new Vector3(initialTargetPosition.x+x,0,initialTargetPosition.z+z);
             //Debug.Log(agentPos.ToString());
-            if (correctPosition(targetPos)) {
+            if (correctPosition(targetPos) /*&& !toomuchExposure(targetPos)*/) {
                 ok = true;
                 // set the Y coordinate according to terrain Y at that point:
                 targetPos.y = Terrain.activeTerrain.SampleHeight(targetPos) + Terrain.activeTerrain.GetPosition().y; 
@@ -166,15 +224,27 @@ public class AgentInclination : Agent
 
     public Vector3 getAgentPosition() {
 
+        
         bool ok = false;
         Vector3 posDef = new Vector3(0,0,0);
-        Vector3 targetPos = target.transform.localPosition;
+        Vector3 targetPos = target.transform.position;
         while (!ok) {
-            float x = Random.Range(-200f,200f);
-            float z = Random.Range(-200f,200f);
-            Vector3 agentPos = new Vector3(targetPos.x+x,0,targetPos.z+z);
+
+            float d = Random.Range(150.0f, 500.0f);
+            float a = Random.Range(0.0f, 2f * Mathf.PI);
+            Vector3 agentPos = new Vector3(
+                    targetPos.x + d*Mathf.Cos(a),
+                    0,
+                    targetPos.z + d*Mathf.Sin(a)
+                );
+
+            //float x = Random.Range(-200f,200f);
+            //float z = Random.Range(-300f,300f);
+            //Vector3 agentPos = new Vector3(targetPos.x+x,0,targetPos.z+z);
+
+
             //Debug.Log(agentPos.ToString());
-            if (correctPosition(agentPos)) {
+            if (correctPosition(agentPos) /*&& !toomuchExposure(agentPos)*/) {
                 ok = true;
                 // set the Y coordinate according to terrain Y at that point:
                 agentPos.y = Terrain.activeTerrain.SampleHeight(agentPos) + Terrain.activeTerrain.GetPosition().y; 
@@ -189,43 +259,20 @@ public class AgentInclination : Agent
         return posDef;
 
     }
+    /*
+    public bool toomuchExposure(Vector3 pos) {
+        float actualExposure = getExposure(pos);
+        if (actualExposure > 0.8f) return true;
+        else return false;
+    }*/
     //Comprueba si una posicion dada esta dentro de los limites del terreno
     public bool correctPosition(Vector3 pos) {
 
-        if (pos.x > 9820 || pos.x < 0f) return false;
-        if (pos.z > 10020f || pos.z < 0f) return false;
-        float actualInclination = float.Parse(inclination[(int)pos.z][(int)pos.x]);
-        if (actualInclination > 140f) return false;
+        if (pos.x >= GRID_SIZE_X || pos.x <= 0f) return false;
+        if (pos.z >= GRID_SIZE_Z || pos.z <= 0f) return false;
+
         return true;
     }
-
-    public bool getInclinationAndSetReward() {
-     
-        float actualHeigh = Terrain.activeTerrain.SampleHeight(transform.localPosition) + Terrain.activeTerrain.GetPosition().y;
-        Vector3 futurePos = transform.localPosition + transform.forward*2;
-        float directionHeight = Terrain.activeTerrain.SampleHeight(futurePos) + Terrain.activeTerrain.GetPosition().y;
-            
-        float actualInclination = float.Parse(inclination[(int)transform.localPosition.z][(int)transform.localPosition.x]);
-        //Debug.Log("Inclinacion: "+actualInclination);
-        if (actualInclination > 140f) {
-            
-            if (directionHeight > actualHeigh) {
-                //Debug.Log("Mucha Inclinacion");
-                transform.localPosition -= transform.forward*2;
-                AddReward(-1f / MaxStep);
-                return false;
-                
-            }
-            else {
-                Debug.Log("Muero por inclinacion");
-                AddReward(-1f);
-                EndEpisode();
-            }    
-        }
-        
-        return true;
-    }  
-
 
     public override void OnActionReceived(ActionBuffers actions)
     {
@@ -241,30 +288,76 @@ public class AgentInclination : Agent
           lTurn = 1;
         }
 
-        if (getInclinationAndSetReward()) {
+        float dist = lForward * _speed * Time.fixedDeltaTime;
+        distanceCovered += dist;
+        walkSteps += 1; // independientemente de si avanzamos o no, nos cansamos
 
-            _rb.MovePosition(transform.position +
-            transform.forward * lForward * _speed * Time.fixedDeltaTime);
-            transform.Rotate(transform.up * lTurn * _turnSpeed * Time.fixedDeltaTime);
+        transform.position += transform.forward * dist;
+        transform.Rotate(transform.up * lTurn * _turnSpeed * Time.fixedDeltaTime);
 
-            if (!correctPosition(transform.localPosition)) {
+        Vector3 p = transform.position;
+        p.y = 1.0f + Terrain.activeTerrain.SampleHeight(p) + Terrain.activeTerrain.GetPosition().y;
+        transform.position = p;
+
+        if (training) {
+
+            if (!correctPosition(transform.position)) {
+                Debug.Log("Out of map");
                 AddReward(-1f);
                 EndEpisode();
             }
 
-            var distanceToTarget = Vector3.Distance(transform.localPosition, target.transform.localPosition);
+            var distanceToTarget = transform.position.FlatDistanceTo(target.transform.position);
             
-            if (distanceToTarget > 800.0f)
+            if (distanceToTarget > SEARCH_RADIUS)
             {
                 Debug.Log("Too Far");
-                AddReward(-1f); // Penalise for going too far away
+                AddReward(-1.0f); // Penalise for going too far away
                 EndEpisode();
             }
 
+            if (walkSteps > MAX_WALK_STEPS) {
+                Debug.Log("Too tired");
+                AddReward(-distanceToTarget/SEARCH_RADIUS);
+                EndEpisode();
+            }
+
+            if (distanceToTarget < 30.0f) {  
+                AddReward(1.0f);
+                Debug.Log("hit at distance " + distanceCovered);
+                EndEpisode();      
+
+                target.transform.position = getTargetStartedPosition();   
+            }
+
+            /*float actualExposure = getExposure(transform.position);
+            if (actualExposure > 0.2f) {
+                if (actualExposure> 0.8f) {
+                    Debug.Log("fall damage");
+                    AddReward(-1.0f);
+                    EndEpisode();    
+                }
+                else{
+                    float prob = (actualExposure-0.2f)/0.8f;
+                    prob = 0.001f*(prob*prob);
+                    //Debug.Log(prob);
+                    float r = Random.Range(0f, 1f);
+                    if (r < prob) {
+                        Debug.Log("fall damage");
+                        AddReward(-1.0f);
+                        EndEpisode();  
+                    }
+                }
+            }*/
+
+            float actualInclination = getInclination(transform.position);
+            //Debug.Log(actualInclination);
+            float t = Math.Max(0, (actualInclination-20f)/(90f-20f));
+            float mult = 1 + t*t;
+            
+            AddReward((-1.0f/MAX_WALK_STEPS)*(mult*mult));
+            //Debug.Log("Inclination: " + actualInclination);
         }
-          
-        AddReward(-1f / MaxStep);
-      
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -294,12 +387,12 @@ public class AgentInclination : Agent
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Target") == true)
+        /*if (collision.gameObject.CompareTag("Target") == true)
         {  
             SetReward(1.5f);
             Debug.Log("hit");
             EndEpisode();         
-        }  
+        }  */
     }
 }
   

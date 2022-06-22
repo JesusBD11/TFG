@@ -23,14 +23,16 @@ public class CheckPoints : Agent
     //private Rigidbody playerRigidbody;
     protected Rigidbody _rb;
 
-    Vector3 [] initialTargetPositions = new Vector3 [3];
+    Vector3 [] initialTargetPositions = new Vector3 [4];
 
     public Vector3 initialAgentPos;
 
-    float [] visitedTarget = new float [3];
+    float [] visitedTarget = new float [4];
     public bool training = true;
 
-    bool is_first;
+    float numVistos;
+
+    private Vector3 startedPos;
 
     public override void Initialize()
     {
@@ -57,12 +59,14 @@ public class CheckPoints : Agent
 
         _rb.velocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
-        visitedTarget = new float [3];
+        visitedTarget = new float [4];
+        startedPos = transform.localPosition;
         getTargetStartedPosition();
         transform.localPosition = getAgentPosition();
         initialAgentPos = transform.localPosition;
         transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
-        is_first = true;
+  
+        numVistos = 0f;
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -81,7 +85,13 @@ public class CheckPoints : Agent
         //Hacia donde mira
         sensor.AddObservation(transform.forward);
         //Vector de visitados
-        sensor.AddObservation(visitedTarget);
+        //sensor.AddObservation(visitedTarget);
+        for(int i = 0; i<visitedTarget.Length; ++i) {
+
+            if (visitedTarget[i] == 1) sensor.AddObservation(1f);
+            else sensor.AddObservation(0f);
+        }
+        sensor.AddObservation(numVistos/4f);
     }
 
     //Calcula una posición random para el Target dentro del Terreno
@@ -92,9 +102,9 @@ public class CheckPoints : Agent
             Vector3 posDef = new Vector3(0,0,0);
             bool ok = false;
             while (!ok) {
-                float x = Random.Range(-300f,300f);
-                float z = Random.Range(-300f,300f);
-                Vector3 targetPos = new Vector3(initialTargetPositions[i].x+x,0,initialTargetPositions[i].z+z);
+                float x = Random.Range(-200f,200f);
+                float z = Random.Range(-200f,200f);
+                Vector3 targetPos = new Vector3(initialTargetPositions[i].x,0,initialTargetPositions[i].z);
                 //Debug.Log(agentPos.ToString());
                 Collider[] colliders = Physics.OverlapSphere(targetPos, 15f);
 
@@ -119,10 +129,10 @@ public class CheckPoints : Agent
 
         bool ok = false;
         Vector3 posDef = new Vector3(0,0,0);
-        Vector3 targetPos = targets[0].transform.localPosition;
+        Vector3 targetPos = startedPos;
         while (!ok) {
-            float x = Random.Range(-300f,300f);
-            float z = Random.Range(-300f,300f);
+            float x = Random.Range(-150f,150f);
+            float z = Random.Range(-150f,150f);
             Vector3 agentPos = new Vector3(targetPos.x+x,0,targetPos.z+z);
 
             Collider[] colliders = Physics.OverlapSphere(agentPos, 15f);
@@ -183,10 +193,11 @@ public class CheckPoints : Agent
         //Debug.Log("tipo:" + tipoTerreno);
 
         var distanceToTarget = Vector3.Distance(transform.localPosition, initialAgentPos);
-        
-        if (distanceToTarget > 1000.0f)
+        Debug.Log(distanceToTarget);
+        if (distanceToTarget > 600.0f)
         {
             Debug.Log("Too Far");
+            
             if (training) AddReward(-1f); // Penalise for going too far away
             EndEpisode();
         }   
@@ -229,7 +240,7 @@ public class CheckPoints : Agent
     }
 
     void printResume() {
-        Debug.Log("Morado = " + visitedTarget[0] + "Azul = " + visitedTarget[1] + "Verde = " + visitedTarget[2]);
+        Debug.Log("Morado = " + visitedTarget[0] + "Azul = " + visitedTarget[1] + "Verde = " + visitedTarget[2] + "Amarillo = +" + visitedTarget[3]);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -238,11 +249,17 @@ public class CheckPoints : Agent
 
             if (collision.gameObject.CompareTag("Target"+ i) == true) {  
                 if (training) {
-                    if (visitedTarget[i-1] == 1f) {
-                        AddReward(-0.1f);
-                    }
-                    else {
-                         if (allvisited()) {
+                    if (visitedTarget[i-1] == 0f) {
+                        numVistos+=1;
+
+                        AddReward(numVistos/4f);
+                        if (numVistos == 4) {
+                            SetReward(1f);
+                            Debug.Log("Todos Vistos");
+                            EndEpisode();
+                        }
+
+                        /*if (allvisited()) {
                             Debug.Log("Todos Vistos");
                             AddReward(1.5f);
                             EndEpisode();
@@ -256,8 +273,11 @@ public class CheckPoints : Agent
                         else {
                             AddReward(1f);
                             //Debug.Log("Segundo que veo");
-                        }
+                        }*/
                         visitedTarget[i-1] = 1f;
+                    }
+                    else {
+                        AddReward(-0.01f);
                     }
                 } 
                 printResume();

@@ -1,0 +1,65 @@
+{
+    "My Behavior": {
+        "checkpoints": [
+            {
+                "steps": 5499936,
+                "file_path": "results\\AgentWith4Class\\My Behavior\\My Behavior-5499936.onnx",
+                "reward": -0.6025977255776525,
+                "creation_time": 1654278196.7269676,
+                "auxillary_file_paths": [
+                    "results\\AgentWith4Class\\My Behavior\\My Behavior-5499936.pt"
+                ]
+            },
+            {
+                "steps": 5999981,
+                "file_path": "results\\AgentWith4Class\\My Behavior\\My Behavior-5999981.onnx",
+                "reward": -0.25506052263081075,
+                "creation_time": 1654282977.0340662,
+                "auxillary_file_paths": [
+                    "results\\AgentWith4Class\\My Behavior\\My Behavior-5999981.pt"
+                ]
+            },
+            {
+                "steps": 6499969,
+                "file_path": "results\\AgentWith4Class\\My Behavior\\My Behavior-6499969.onnx",
+                "reward": 0.44386425779925454,
+                "creation_time": 1654287783.7105925,
+                "auxillary_file_paths": [
+                    "results\\AgentWith4Class\\My Behavior\\My Behavior-6499969.pt"
+                ]
+            },
+            {
+                "steps": 6727822,
+                "file_path": "results\\AgentWith4Class\\My Behavior\\My Behavior-6727822.onnx",
+                "reward": -1.130352937305967,
+                "creation_time": 1654289977.0229979,
+                "auxillary_file_paths": [
+                    "results\\AgentWith4Class\\My Behavior\\My Behavior-6727822.pt"
+                ]
+            },
+            {
+                "steps": 6781678,
+                "file_path": "results\\AgentWith4Class\\My Behavior\\My Behavior-6781678.onnx",
+                "reward": null,
+                "creation_time": 1654290549.2060206,
+                "auxillary_file_paths": [
+                    "results\\AgentWith4Class\\My Behavior\\My Behavior-6781678.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 6781678,
+            "file_path": "results\\AgentWith4Class\\My Behavior.onnx",
+            "reward": null,
+            "creation_time": 1654290549.2060206,
+            "auxillary_file_paths": [
+                "results\\AgentWith4Class\\My Behavior\\My Behavior-6781678.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

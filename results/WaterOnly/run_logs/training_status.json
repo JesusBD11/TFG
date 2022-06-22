@@ -1,0 +1,65 @@
+{
+    "My Behavior": {
+        "checkpoints": [
+            {
+                "steps": 499938,
+                "file_path": "results\\WaterOnly\\My Behavior\\My Behavior-499938.onnx",
+                "reward": -1.4789037751033902,
+                "creation_time": 1654027494.5005004,
+                "auxillary_file_paths": [
+                    "results\\WaterOnly\\My Behavior\\My Behavior-499938.pt"
+                ]
+            },
+            {
+                "steps": 999993,
+                "file_path": "results\\WaterOnly\\My Behavior\\My Behavior-999993.onnx",
+                "reward": -1.19316491112113,
+                "creation_time": 1654032061.5623968,
+                "auxillary_file_paths": [
+                    "results\\WaterOnly\\My Behavior\\My Behavior-999993.pt"
+                ]
+            },
+            {
+                "steps": 1261963,
+                "file_path": "results\\WaterOnly\\My Behavior\\My Behavior-1261963.onnx",
+                "reward": -1.1181722424924374,
+                "creation_time": 1654034437.9717064,
+                "auxillary_file_paths": [
+                    "results\\WaterOnly\\My Behavior\\My Behavior-1261963.pt"
+                ]
+            },
+            {
+                "steps": 1401158,
+                "file_path": "results\\WaterOnly\\My Behavior\\My Behavior-1401158.onnx",
+                "reward": -1.1295344444612663,
+                "creation_time": 1654035787.0427718,
+                "auxillary_file_paths": [
+                    "results\\WaterOnly\\My Behavior\\My Behavior-1401158.pt"
+                ]
+            },
+            {
+                "steps": 1467847,
+                "file_path": "results\\WaterOnly\\My Behavior\\My Behavior-1467847.onnx",
+                "reward": -1.0838382082680862,
+                "creation_time": 1654036661.8512745,
+                "auxillary_file_paths": [
+                    "results\\WaterOnly\\My Behavior\\My Behavior-1467847.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1467847,
+            "file_path": "results\\WaterOnly\\My Behavior.onnx",
+            "reward": -1.0838382082680862,
+            "creation_time": 1654036661.8512745,
+            "auxillary_file_paths": [
+                "results\\WaterOnly\\My Behavior\\My Behavior-1467847.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}
